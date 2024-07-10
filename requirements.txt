@@ -1,0 +1,12 @@
+streamlit 
+python-dotenv
+aiohttp #for telegram
+requests
+
+numpy
+librosa 
+torch 
+torchaudio 
+openunmix
+
+
