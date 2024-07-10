@@ -44,23 +44,23 @@ def main():
         start_over()
 
     file_path = upload_file()
-    st.session_state['file_path'] = file_path
+    if file_path:
+        st.session_state['file_path'] = file_path
 
     if st.button("חלץ קולות ומוזיקה מהשיר", use_container_width=True):
         if 'file_path' not in st.session_state or not st.session_state['file_path']:
             st.error("נא להעלות קובץ תחילה.")
-            return
-
-        original_audio_path = process_interviews(st.session_state['file_path'])
-        if original_audio_path:
-            asyncio.run(send_telegram_audio(original_audio_path))
+        else:
+            original_audio_path = process_interviews(st.session_state['file_path'])
+            if original_audio_path:
+                asyncio.run(send_telegram_audio(original_audio_path))
+            
+            # Call cleanup_files() only after processing is complete
+            cleanup_files()
 
     user_count = get_user_count(formatted=True)
     footer_with_count = f"{footer_content}\n\n<p class='user-count'>סה\"כ משתמשים: {user_count}</p>"
     st.markdown(footer_with_count, unsafe_allow_html=True)
-
-    # Cleanup all temporary files, including the uploaded file
-    cleanup_files()
 
 async def send_telegram_audio(audio_path):
     sender = st.session_state.telegram_sender

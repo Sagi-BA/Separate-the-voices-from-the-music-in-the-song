@@ -61,19 +61,31 @@ def process_interviews(audio_file_path):
     return audio_file_path
 
 def cleanup_files():
+    # Clean up voice file
     if 'voice_path' in st.session_state:
-        if os.path.exists(st.session_state.voice_path):
-            os.remove(st.session_state.voice_path)
-        del st.session_state.voice_path
-    
+        try:
+            if os.path.exists(st.session_state.voice_path):
+                os.remove(st.session_state.voice_path)
+            del st.session_state.voice_path
+        except Exception as e:
+            print(f"Error removing voice file: {e}")
+
+    # Clean up music file
     if 'music_path' in st.session_state:
-        if os.path.exists(st.session_state.music_path):
-            os.remove(st.session_state.music_path)
-        del st.session_state.music_path
-    
-    if 'file_path' in st.session_state:
-        if os.path.exists(st.session_state.file_path):
-            os.remove(st.session_state.file_path)
-        del st.session_state.file_path
-    
+        try:
+            if os.path.exists(st.session_state.music_path):
+                os.remove(st.session_state.music_path)
+            del st.session_state.music_path
+        except Exception as e:
+            print(f"Error removing music file: {e}")
+
+    # Clean up original uploaded file
+    if 'file_path' in st.session_state and st.session_state.file_path:
+        try:
+            if os.path.exists(st.session_state.file_path):
+                os.remove(st.session_state.file_path)
+            del st.session_state.file_path
+        except Exception as e:
+            print(f"Error removing uploaded file: {e}")
+
     st.session_state.processed = False
