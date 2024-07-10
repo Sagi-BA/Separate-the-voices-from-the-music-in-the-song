@@ -2,5 +2,6 @@
 .env
 temp_audio
 uploads
+sample_songs
 # Ignore all __pycache__ directories
 **/__pycache__/
