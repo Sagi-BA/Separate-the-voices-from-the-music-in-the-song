@@ -55,12 +55,17 @@ def main():
         if 'file_path' not in st.session_state or not st.session_state['file_path']:
             st.error("נא להעלות קובץ תחילה.")
         else:
-            original_audio_path = process_interviews(st.session_state['file_path'])
-            if original_audio_path:
-                asyncio.run(send_telegram_audio(original_audio_path))
-            
-            # Call cleanup_files() only after processing is complete
-            cleanup_files()
+            try:
+                with st.spinner('מעבד את הקובץ...'):
+                    original_audio_path = process_interviews(st.session_state['file_path'])
+                if original_audio_path:
+                    asyncio.run(send_telegram_audio(original_audio_path))
+                else:
+                    st.error("אירעה שגיאה בעיבוד הקובץ.")
+            except Exception as e:
+                st.error(f"אירעה שגיאה: {str(e)}")
+            finally:
+                cleanup_files()
 
     user_count = get_user_count(formatted=True)
     footer_with_count = f"{footer_content}\n\n<p class='user-count'>סה\"כ משתמשים: {user_count}</p>"

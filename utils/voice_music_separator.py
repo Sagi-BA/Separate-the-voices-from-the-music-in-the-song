@@ -3,6 +3,8 @@ import torchaudio
 import os
 from openunmix import predict
 import numpy as np
+import soundfile as sf
+
 
 class VoiceMusicSeparator:
     def __init__(self, output_dir='temp_audio'):
@@ -13,9 +15,16 @@ class VoiceMusicSeparator:
 
     def process_file(self, audio_path):
         try:
-            # Load audio file
-            audio, sample_rate = torchaudio.load(audio_path)
+             # Use soundfile to read various audio formats
+            audio, sample_rate = sf.read(audio_path)
 
+            # If the audio is not mono, convert it to mono
+            if len(audio.shape) > 1:
+                audio = np.mean(audio, axis=1)
+
+            # Convert to torch tensor
+            audio = torch.FloatTensor(audio).unsqueeze(0)
+            
             # Process in chunks to reduce memory usage
             chunk_size = 10 * sample_rate  # 10 seconds chunks
             num_chunks = audio.shape[1] // chunk_size + 1
