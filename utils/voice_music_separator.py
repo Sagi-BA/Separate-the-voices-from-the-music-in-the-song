@@ -12,59 +12,62 @@ class VoiceMusicSeparator:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     def process_file(self, audio_path):
-        # Load audio file
-        audio, sample_rate = torchaudio.load(audio_path)
+        try:
+            # Load audio file
+            audio, sample_rate = torchaudio.load(audio_path)
 
-        # Separate audio
-        estimates = predict.separate(audio, rate=sample_rate, device=self.device)
+            # Process in chunks to reduce memory usage
+            chunk_size = 10 * sample_rate  # 10 seconds chunks
+            num_chunks = audio.shape[1] // chunk_size + 1
 
-        print(f"Estimate keys: {estimates.keys()}")
-        print(f"Original audio shape: {audio.shape}")
-        print(f"Vocals shape: {estimates['vocals'].shape}")
+            vocals = []
+            accompaniment = []
 
-        # Get base filename without extension
-        base_name = os.path.splitext(os.path.basename(audio_path))[0]
+            for i in range(num_chunks):
+                start = i * chunk_size
+                end = min((i + 1) * chunk_size, audio.shape[1])
+                chunk = audio[:, start:end]
 
-        # Define output paths
-        voice_output_path = os.path.join(self.output_dir, f"{base_name}_voice.wav")
-        music_output_path = os.path.join(self.output_dir, f"{base_name}_music.wav")
+                # Separate audio
+                estimates = predict.separate(chunk, rate=sample_rate, device=self.device)
 
-        # Prepare the audio for saving
-        vocals = estimates['vocals'].squeeze().cpu().numpy()
-        original_audio = audio.squeeze().cpu().numpy()
+                vocals.append(estimates['vocals'].squeeze().cpu().numpy())
+                
+                # Use 'other' if 'accompaniment' is not present
+                if 'accompaniment' in estimates:
+                    accompaniment.append(estimates['accompaniment'].squeeze().cpu().numpy())
+                elif 'other' in estimates:
+                    accompaniment.append(estimates['other'].squeeze().cpu().numpy())
+                else:
+                    raise KeyError("Neither 'accompaniment' nor 'other' key found in estimates")
 
-        # Ensure the lengths match
-        min_length = min(vocals.shape[1], original_audio.shape[1])
-        vocals = vocals[:, :min_length]
-        original_audio = original_audio[:, :min_length]
+            vocals = np.concatenate(vocals, axis=1)
+            accompaniment = np.concatenate(accompaniment, axis=1)
 
-        # Calculate the accompaniment
-        accompaniment = original_audio - vocals
+            # Get base filename without extension
+            base_name = os.path.splitext(os.path.basename(audio_path))[0]
 
-        # Ensure the audio is in the correct range
-        vocals = np.clip(vocals, -1, 1)
-        accompaniment = np.clip(accompaniment, -1, 1)
+            # Define output paths
+            voice_output_path = os.path.join(self.output_dir, f"{base_name}_voice.wav")
+            music_output_path = os.path.join(self.output_dir, f"{base_name}_music.wav")
 
-        # Convert to 16-bit PCM
-        vocals = (vocals * 32767).astype(np.int16)
-        accompaniment = (accompaniment * 32767).astype(np.int16)
+            # Ensure the audio is in the correct range
+            vocals = np.clip(vocals, -1, 1)
+            accompaniment = np.clip(accompaniment, -1, 1)
 
-        # Save separated audio
-        torchaudio.save(voice_output_path, torch.from_numpy(vocals), sample_rate)
-        torchaudio.save(music_output_path, torch.from_numpy(accompaniment), sample_rate)
+            # Convert to 16-bit PCM
+            vocals = (vocals * 32767).astype(np.int16)
+            accompaniment = (accompaniment * 32767).astype(np.int16)
 
-        return voice_output_path, music_output_path
+            # Save separated audio
+            torchaudio.save(voice_output_path, torch.from_numpy(vocals), sample_rate)
+            torchaudio.save(music_output_path, torch.from_numpy(accompaniment), sample_rate)
 
-    def process_multiple_files(self, audio_files):
-        results = []
-        for audio_file in audio_files:
-            voice_path, music_path = self.process_file(audio_file)
-            results.append({
-                'original': audio_file,
-                'voice': voice_path,
-                'music': music_path
-            })
-        return results
+            return voice_output_path, music_output_path
+
+        except Exception as e:
+            print(f"Error processing file: {e}")
+            return None, None
 
 
 if __name__ == "__main__":

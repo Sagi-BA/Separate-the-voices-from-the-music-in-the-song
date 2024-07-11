@@ -1,6 +1,5 @@
 # [![Watch the video](https://img.youtube.com/vi/vdaXGeOyvbE/maxresdefault.jpg)](https://youtu.be/vdaXGeOyvbE)
 
-# ![image](https://i.imgur.com/FXFMBi4.jpeg)
 
 import asyncio
 import streamlit as st
@@ -40,8 +39,12 @@ def start_over():
     print("Session state cleared for Start Over")
 
 def main():
-    header_content, footer_content = initialize()
-    st.markdown(header_content)
+    title, image_path, footer_content = initialize()
+
+    st.title(title)
+    
+    if image_path:
+        st.image(image_path, use_column_width=True)
 
     if st.button("התחל מחדש", use_container_width=True):
         start_over()
@@ -63,7 +66,7 @@ def main():
 
     user_count = get_user_count(formatted=True)
     footer_with_count = f"{footer_content}\n\n<p class='user-count'>סה\"כ משתמשים: {user_count}</p>"
-    st.markdown(footer_with_count, unsafe_allow_html=True)
+    st.markdown(footer_content, unsafe_allow_html=True)
 
 async def send_telegram_audio(audio_path):
     sender = st.session_state.telegram_sender

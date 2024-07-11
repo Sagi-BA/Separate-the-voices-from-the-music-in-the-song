@@ -15,6 +15,8 @@ if not os.path.exists(TEMP_AUDIO_DIR):
     os.makedirs(TEMP_AUDIO_DIR)
 
 def get_binary_file_downloader_html(bin_file, file_label='File'):
+    if bin_file is None or not os.path.exists(bin_file):
+        return f"<p>קובץ {file_label} לא זמין</p>"
     with open(bin_file, 'rb') as f:
         data = f.read()
     bin_str = base64.b64encode(data).decode()
@@ -26,7 +28,10 @@ def display_audio_with_download(file_path, label, icon):
     with col1:
         st.markdown(f'<i class="fas {icon} fa-2x"></i>', unsafe_allow_html=True)
     with col2:
-        st.audio(file_path, format="audio/wav")
+        if file_path and os.path.exists(file_path):
+            st.audio(file_path, format="audio/wav")
+        else:
+            st.write(f"{label} לא זמין")
     with col3:
         st.markdown(get_binary_file_downloader_html(file_path, label), unsafe_allow_html=True)
 
@@ -39,6 +44,9 @@ def process_interviews(audio_file_path):
             with st.spinner('נא להמתין מבצע עיבוד...'):
                 separator = VoiceMusicSeparator()            
                 voice_path, music_path = separator.process_file(audio_file_path)
+                if voice_path is None or music_path is None:
+                    st.error("אירעה שגיאה בעיבוד הקובץ.")
+                    return None
                 st.success("הפרדת הקולות מהמוזיקה בוצעה בהצלחה!")
                 st.session_state.voice_path = voice_path
                 st.session_state.music_path = music_path
@@ -53,39 +61,21 @@ def process_interviews(audio_file_path):
     display_audio_with_download(audio_file_path, "קובץ מקורי", "fa-file-audio")
     
     st.write("קובץ קול מופרד:")
-    display_audio_with_download(st.session_state.voice_path, "קובץ קול", "fa-microphone")
+    display_audio_with_download(st.session_state.get('voice_path'), "קובץ קול", "fa-microphone")
     
     st.write("קובץ מוזיקה מופרד:")
-    display_audio_with_download(st.session_state.music_path, "קובץ מוזיקה", "fa-music")
+    display_audio_with_download(st.session_state.get('music_path'), "קובץ מוזיקה", "fa-music")
 
     return audio_file_path
 
 def cleanup_files():
-    # Clean up voice file
-    if 'voice_path' in st.session_state:
-        try:
-            if os.path.exists(st.session_state.voice_path):
-                os.remove(st.session_state.voice_path)
-            del st.session_state.voice_path
-        except Exception as e:
-            print(f"Error removing voice file: {e}")
-
-    # Clean up music file
-    if 'music_path' in st.session_state:
-        try:
-            if os.path.exists(st.session_state.music_path):
-                os.remove(st.session_state.music_path)
-            del st.session_state.music_path
-        except Exception as e:
-            print(f"Error removing music file: {e}")
-
-    # Clean up original uploaded file
-    if 'file_path' in st.session_state and st.session_state.file_path:
-        try:
-            if os.path.exists(st.session_state.file_path):
-                os.remove(st.session_state.file_path)
-            del st.session_state.file_path
-        except Exception as e:
-            print(f"Error removing uploaded file: {e}")
+    for key in ['voice_path', 'music_path', 'file_path']:
+        if key in st.session_state and st.session_state[key]:
+            try:
+                if os.path.exists(st.session_state[key]):
+                    os.remove(st.session_state[key])
+                del st.session_state[key]
+            except Exception as e:
+                st.warning(f"שגיאה במחיקת {key}: {str(e)}")
 
     st.session_state.processed = False

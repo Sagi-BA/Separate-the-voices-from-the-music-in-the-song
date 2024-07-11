@@ -2,7 +2,7 @@
 
 # 👀 Separate the voices from the music in the song
 
-This application allows users to separate the voices from the music in the song
+This application allows users to separate the voices from the song
 
 > You can try the app [here](https://sagi-separate-the-voices-from-the-music-in-the-song.streamlit.app/)
 
@@ -23,7 +23,7 @@ This application allows users to separate the voices from the music in the song
 
 ## How it works
 
-This application allows users to upload videos or any audio files and extract text from them.
+This application allows users to separate the voices from the song
 
 ## Install dependencies
 
