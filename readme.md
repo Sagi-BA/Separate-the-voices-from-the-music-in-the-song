@@ -19,7 +19,7 @@ This application allows users to separate the voices from the song
 
 ## Watch the video tutorial
 
-[![Watch the video](https://img.youtube.com/vi/vdaXGeOyvbE/maxresdefault.jpg)](https://youtu.be/vdaXGeOyvbE)
+![header image](https://i.imgur.com/GJGEDkz.jpg)
 
 ## How it works
 
