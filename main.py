@@ -64,7 +64,7 @@ def main():
 
     user_count = get_user_count(formatted=True)
     footer_with_count = f"{footer_content}\n\n<p class='user-count'>סה\"כ משתמשים: {user_count}</p>"
-    st.markdown(footer_content, unsafe_allow_html=True)
+    st.markdown(footer_with_count, unsafe_allow_html=True)
 
 async def send_telegram_audio(audio_path):
     sender = st.session_state.telegram_sender
