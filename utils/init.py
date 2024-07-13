@@ -3,7 +3,7 @@ from streamlit.components.v1 import html
 import os
 
 def initialize():
-    st.set_page_config(layout="wide", page_title="אפליקציה המחלצת קולות ומוזיקה מכל שיר", page_icon="🎙️🎶")
+    st.set_page_config(layout="wide", page_title="אפליקציה המחלצת קולות ומוזיקה מכל שיר", page_icon="🎶")
     
     # Load external CSS
     css_file_path = os.path.join('utils', 'styles.css')
