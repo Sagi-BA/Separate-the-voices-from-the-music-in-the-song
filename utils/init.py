@@ -3,18 +3,12 @@ from streamlit.components.v1 import html
 import os
 
 def initialize():
-    st.set_page_config(layout="wide", page_title="אפליקציה המחלצת קולות ומוזיקה מכל שיר", page_icon="📷")
-
-    st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">', unsafe_allow_html=True)
+    st.set_page_config(layout="wide", page_title="אפליקציה המחלצת קולות ומוזיקה מכל שיר", page_icon="🎙️🎶")
     
     # Load external CSS
     css_file_path = os.path.join('utils', 'styles.css')
     with open(css_file_path, 'r') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-    custom_file_path = os.path.join('utils', 'custom.css')
-    with open(custom_file_path, 'r') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)        
 
     # Load external JavaScript
     js_file_path = os.path.join('utils', 'script.js')

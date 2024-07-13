@@ -1,6 +1,31 @@
+/* Import a nice font */
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");
+
+:root {
+  --primary-color: #0099ff;
+  --primary-hover: #0077cc;
+  --background-color: #f0f4f8;
+  --text-color: #1a202c;
+  --header-footer-bg: #f0f2f6;
+  --correct-color: #32cd32;
+  --incorrect-color: #ff6347;
+}
+
 body {
   direction: rtl;
   text-align: right;
+  font-family: "Rubik", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 24px;
+}
+
+.image-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .stApp > header {
@@ -8,9 +33,13 @@ body {
   padding: 1rem;
 }
 
+.stApp > header,
 .stApp > footer {
-  background-color: #f0f2f6;
+  background-color: var(--header-footer-bg);
   padding: 1rem;
+}
+
+.stApp > footer {
   text-align: center;
 }
 
@@ -45,43 +74,11 @@ textarea {
 
 /* Title styling */
 h1 {
-  font-size: 2rem;
+  font-size: 40px;
   margin-bottom: 1rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
-}
-
-/* Responsive styles */
-@media screen and (max-width: 768px) {
-  .main .block-container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .row-widget.stRadio > div {
-    flex-direction: column;
-  }
-
-  /* Increase button size on mobile for better touch targets */
-  .stButton > button {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-  }
-
-  /* Adjust title size for mobile */
-  h1 {
-    font-size: 1.5rem;
-  }
-}
-
-/* Further adjustments for very small screens */
-@media screen and (max-width: 480px) {
-  h1 {
-    font-size: 1.2rem;
-  }
 }
 
 /* Ensure images don't overflow their containers */
@@ -92,17 +89,34 @@ img {
 
 /* Custom styles for layout */
 .stApp {
-  font-family: "Arial", sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 /* Improve file uploader appearance */
 .stFileUploader > div:first-child {
   width: 100%;
+  border: 2px dashed #4299e1;
+  border-radius: 5px;
+  padding: 1rem;
 }
 
 .stFileUploader > div:first-child > div {
   width: 100%;
 }
+
+/* Image grid styles */
+.stImage {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.stImage:hover {
+  transform: scale(1.05);
+}
+
 .download-link {
   background-color: #4caf50;
   border: none;
@@ -130,4 +144,130 @@ div.stButton > button:first-child {
 div.stButton > button:hover {
   background-color: #0077cc;
   border-color: #0077cc;
+}
+/* Footer styles */
+footer {
+  text-align: right;
+  direction: rtl;
+  padding: 2rem 0;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+footer h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+footer h3 {
+  color: #34495e;
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+footer p {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section {
+  margin-bottom: 1.5rem;
+}
+
+.footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.footer-badges a {
+  transition: transform 0.2s ease-in-out;
+}
+
+.footer-badges a:hover {
+  transform: translateY(-2px);
+}
+
+footer hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #e9ecef;
+}
+
+.user-count {
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 20px;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  .main .block-container {
+    padding: 1rem;
+  }
+
+  .stButton > button {
+    padding: 10px 20px;
+  }
+
+  .word-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .word-item {
+    padding: 10px;
+  }
+}
+
+/* Further adjustments for very small screens */
+
+@media screen and (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .word-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .word-item {
+    padding: 8px;
+  }
+
+  .stNumberInput {
+    margin-top: -1rem;
+  }
+  .stNumberInput > div > div > input {
+    font-size: 54px;
+  }
+  .stNumberInput > div > div > label {
+    font-size: 54px;
+  }
 }

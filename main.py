@@ -37,21 +37,21 @@ def start_over():
     print("Session state cleared for Start Over")
 
 def main():
-    title, image_path, footer_content = initialize()
+    header_content, image_path, footer_content = initialize()    
 
-    st.title(title)
+    st.markdown(f"<h2 style='text-align: center; color: #FF69B4;'>{header_content}</h2>", unsafe_allow_html=True)
     
     if image_path:
         st.image(image_path, use_column_width=True)
 
-    if st.button("התחל מחדש", use_container_width=True):
+    if st.button("להתחיל מחדש", use_container_width=True):
         start_over()
 
     file_path = upload_file()
     if file_path:
         st.session_state['file_path'] = file_path
 
-    if st.button("חלץ קולות ומוזיקה מהשיר", use_container_width=True):
+    if st.button("לחלץ קולות ומוזיקה מהשיר", use_container_width=True):
         if 'file_path' not in st.session_state or not st.session_state['file_path']:
             st.error("נא להעלות קובץ תחילה.")
         else:
