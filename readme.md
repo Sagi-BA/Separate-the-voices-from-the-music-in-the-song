@@ -19,7 +19,7 @@ This application allows users to separate the voices from the song
 
 ## Watch the video tutorial
 
-![header image](https://i.imgur.com/GJGEDkz.jpg)
+# [![Watch the video](https://i.imgur.com/GJGEDkz.jpg)](https://www.youtube.com/watch?v=E0iGzySUC3k)
 
 ## How it works
 
@@ -36,8 +36,8 @@ Run the following command to install them:
 
 ## Usage
 
-Upload Images: Click the 'Upload' button to select images from your device.
-Copy to Clipboard: Once the text is extracted you can edit and copy it for your own use.
+Click the 'Browse files' button to select song from your device.
+then clisk "לחלץ קולות ומוזיקה מהשיר"
 
 Make sure you have [Streamlit installed](https://docs.streamlit.io/) CLI before running the application.  
 Run the following command in your terminal:
